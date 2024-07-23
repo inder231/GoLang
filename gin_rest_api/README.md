@@ -22,6 +22,8 @@
 - `go get -u github.com/gin-gonic/gin`
 2. go-sqlite3
 - `go get github.com/mattn/go-sqlite3`
+3. bcrypt packate for password hashing
+- `go get -u golang.org/x/crypto`
 
 ### Basic server setup
 
