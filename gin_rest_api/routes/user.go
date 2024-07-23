@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"rest-api/models"
 	"rest-api/utils"
@@ -48,7 +47,7 @@ func login(c *gin.Context) {
 	}
 
 	token, err := utils.GenerateToken(user.Email, user.ID)
-	fmt.Println("Error ----", err)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to authenticate."})
         return
