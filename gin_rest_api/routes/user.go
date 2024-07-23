@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"rest-api/models"
+	"rest-api/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,7 +39,7 @@ func login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Could not parse request body."})
         return
 	}
-	
+	// Validate password will validate password and attach user's id with user struct instance
 	err = user.ValidateCredentials()
 
 	if err != nil {
@@ -45,5 +47,12 @@ func login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login successful."})
+	token, err := utils.GenerateToken(user.Email, user.ID)
+	fmt.Println("Error ----", err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to authenticate."})
+        return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login successful.", "token": token})
 }

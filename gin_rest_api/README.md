@@ -24,6 +24,8 @@
 - `go get github.com/mattn/go-sqlite3`
 3. bcrypt packate for password hashing
 - `go get -u golang.org/x/crypto`
+4. JWT ( JsonWebToken ) for login token generation
+- `go get -u github.com/golang-jwt/jwt/v5`
 
 ### Basic server setup
 
