@@ -22,6 +22,9 @@
 - `go get -u github.com/gin-gonic/gin`
 2. go-sqlite3
 - `go get github.com/mattn/go-sqlite3`
+	- To run sqlite3 on system : RUN : `sqlite3`
+	- Then you can access the db directly
+
 3. bcrypt packate for password hashing
 - `go get -u golang.org/x/crypto`
 4. JWT ( JsonWebToken ) for login token generation
