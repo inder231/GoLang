@@ -3,7 +3,6 @@ package routes
 import (
 	"net/http"
 	"rest-api/models"
-	"rest-api/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -19,34 +18,18 @@ func getEvents ( c *gin.Context) {
 }
 
 func createEvent ( c *gin.Context ) {
-
-	token := c.Request.Header.Get("Authorization")
-	
-	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-        return
-	}
-	
-	// Validate token
-	err := utils.VerifyToken(token)
-
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-
 	// New event
 	var event models.Event
 	// Bind the json data to event variable
 	// c.BindJSON(&event)
-	err = c.ShouldBindJSON(&event)
+	err := c.ShouldBindJSON(&event)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
 	}
 
-	event.ID = 1
-	event.UserID = 1
+	// Set userid of user who is logged in
+	event.UserID = c.GetInt64("userId")
 
 	// Save the event to db
 	err = event.Save()
@@ -93,10 +76,18 @@ func updateEvent(c *gin.Context) {
 		return
 	}
 
-	_, err = models.GetEventById(id)
+	userId := c.GetInt64("userId") // extract userId from gin context
+
+	event, err := models.GetEventById(id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch event."})
+		return
+	}
+
+	// Check if user who is updating the event is the same who created it
+	if userId != event.UserID {
+		c.JSON(http.StatusUnauthorized, gin.H{"error" : "You are not authorized to perform the action!"})
 		return
 	}
 
@@ -131,8 +122,16 @@ func deleteEvent(c *gin.Context) {
 
 	event, err := models.GetEventById(id)
 
+	userId := c.GetInt64("userId") // extract userId from gin context
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch event."})
+		return
+	}
+
+	// Check if user who is updating the event is the same who created it
+	if userId != event.UserID {
+		c.JSON(http.StatusUnauthorized, gin.H{"error" : "You are not authorized to perform the action!"})
 		return
 	}
 

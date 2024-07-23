@@ -16,14 +16,14 @@ type Event struct {
 	Description string  `binding:"required"`
 	Location string     `binding:"required"`
 	DateTime time.Time  `binding:"required"`
-	UserID int
+	UserID int64
 }
 
 // var events = []Event{}
 
 // Adding method to event struct
 
-func (e Event) Save() error {
+func (e *Event) Save() error {
 	// add to db
 
 	// query : TO AVOID SQL INJECTION ATTACKS WE USE QUESTION marks

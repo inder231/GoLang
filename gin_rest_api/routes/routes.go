@@ -1,6 +1,10 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"rest-api/middlewares"
+
+	"github.com/gin-gonic/gin"
+)
 
 func RegisterRoutes(server *gin.Engine) {
 		// Setting handler to handle http get request
@@ -9,14 +13,25 @@ func RegisterRoutes(server *gin.Engine) {
 		// Getting single event
 		server.GET("/events/:id", getSingleEvent)
 	
-		// Create a new event
-		server.POST("/events", createEvent)
+		// Group authenticated middlware in one group
+		authenticated := server.Group("/")
+		// Attach middlware using Use method
+		authenticated.Use(middlewares.Authenticate)
+		// Create Event
+		authenticated.POST("/events", createEvent)
+		// Update Event
+		authenticated.PUT("/events/:id", updateEvent)
+		// Delete Event
+		authenticated.DELETE("/events/:id", deleteEvent)
 
-		// Update the event
-		server.PUT("/events/:id", updateEvent)
+		// // Create a new event
+		// server.POST("/events", middlewares.Authenticate, createEvent)
 
-		// Delete the event
-		server.DELETE("/events/:id", deleteEvent)
+		// // Update the event
+		// server.PUT("/events/:id", updateEvent)
+
+		// // Delete the event
+		// server.DELETE("/events/:id", deleteEvent)
 
 		// Signup route
 		server.POST("/signup", signup)
