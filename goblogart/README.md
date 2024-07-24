@@ -1,4 +1,5 @@
-## Production ready project setup
+## Production ready project setup   
+- https://www.honeybadger.io/blog/a-step-by-step-guide-to-creating-production-ready-apis-in-go-with-gin-and-gorm/
 
 - go mod init goblogart
 
@@ -36,3 +37,15 @@
 
 8. RUN: `CompileDaemon -command-"./goblogart"` to build project automatically every time we save a file. ( if didn't work run : `export PATH=$PATH:$(go env GOPATH)/bin`
  as well )
+
+
+ ##### DB connection
+
+ 1. made mongodb connection
+ 2. made mysql db connection
+    - make sure to create a db in mysql before connection otherwise it will give error
+    - create a database `create database goserver`
+
+##### Database modeling
+- create a struct called post with gorm's model in it
+- create the migration.go file and run the following command `go run migrations/mirgrations.go`

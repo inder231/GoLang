@@ -1,8 +1,8 @@
 package main
 
 import (
+	"goblogart/controllers"
 	"goblogart/inits"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,9 +11,12 @@ import (
 func init() {
 	inits.LoadEnv()
 
-	if err := inits.DBInit(); err != nil {
-		log.Fatal("Could not connect to MongoDB")
-	}
+	/* MongoDB connection commented. */
+	// if err := inits.MongoDBInit(); err != nil {
+	// 	log.Fatal("Could not connect to MongoDB")
+	// }
+
+	inits.MySqlDBInit()
 }
 
 func main() {
@@ -24,6 +27,12 @@ func main() {
 			"message": "Hello world!",
 		})
 	})
+
+	r.POST("/posts", controllers.CreatePost)
+	r.GET("/posts", controllers.GetPosts)
+	r.GET("/posts/:id", controllers.GetPost)
+	r.PUT("/posts/:id", controllers.UpdatePost)
+	r.DELETE("/posts/:id", controllers.DeletePost)
 
 	r.Run()
 }
